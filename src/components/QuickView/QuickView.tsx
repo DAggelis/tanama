@@ -8,7 +8,7 @@ import { useCart } from '@/context/CartContext';
 export default function QuickView({ product, onClose }: { product: any; onClose: () => void }) {
   const { addToCart } = useCart();
   const [selectedVariantIndex, setSelectedVariantIndex] = useState<number | null>(null);
-  const [quantity, setQuantity] = useState(1); // Αυτό είναι το state που αλλάζει
+  const [quantity, setQuantity] = useState(1);
 
   const variants = Array.isArray(product?.variants) ? product.variants : [];
   const selectedVariant = selectedVariantIndex !== null ? variants[selectedVariantIndex] : null;
@@ -36,20 +36,26 @@ export default function QuickView({ product, onClose }: { product: any; onClose:
   };
 
   const handleAddToCart = () => {
-    const finalPrice = selectedVariant ? Number(selectedVariant.variantPrice) : Number(product?.price || 0);
+    // 1. Σωστή τιμή (Number)
+    const finalPrice = selectedVariant 
+      ? Number(selectedVariant.variantPrice) 
+      : Number(product?.price || 0);
     
-    // Εδώ προσθέτουμε την επιλογή παραλλαγής στον τίτλο
+    // 2. Σωστός τίτλος με την παραλλαγή
     const finalTitle = selectedVariant 
       ? `${product?.title} (${selectedVariant.variantTitle})` 
       : product?.title;
 
-    // ΠΡΟΣΟΧΗ: Εδώ περνάμε το 'quantity' από το state!
+    // 3. Σωστό βάρος (για να δουλέψουν οι κανόνες μεταφορικών στο Context/API)
+    const finalWeight = selectedVariant?.variantWeight || product?.weight || 0;
+
     addToCart({
       _id: product?._id,
       title: finalTitle,
       price: finalPrice,
       imageUrl: product?.imageUrl,
-      quantity: quantity // <--- Αυτό έφταιγε!
+      quantity: quantity,
+      weight: finalWeight // Προσθήκη βάρους
     });
 
     // Ενημέρωση του UI για το άνοιγμα του καλαθιού
@@ -101,7 +107,6 @@ export default function QuickView({ product, onClose }: { product: any; onClose:
 
             <div className={styles.cartActions}>
               <div className={styles.quantityWrapper}>
-                {/* Κουμπί Μείον */}
                 <button 
                   type="button"
                   onClick={() => setQuantity(prev => Math.max(1, prev - 1))} 
@@ -112,7 +117,6 @@ export default function QuickView({ product, onClose }: { product: any; onClose:
                 
                 <span className={styles.qtyValue}>{quantity}</span>
                 
-                {/* Κουμπί Συν */}
                 <button 
                   type="button"
                   onClick={() => setQuantity(prev => prev + 1)} 
