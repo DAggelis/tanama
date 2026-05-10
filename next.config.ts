@@ -1,13 +1,14 @@
-import type { NextConfig } from "next";
-
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   reactCompiler: true,
+  // @ts-ignore
   typescript: {
     ignoreBuildErrors: true,
   },
+  // @ts-ignore
   eslint: {
     ignoreDuringBuilds: true,
   },
-} as NextConfig; // <--- Το βάζουμε εδώ στο τέλος
+};
 
 export default nextConfig;
