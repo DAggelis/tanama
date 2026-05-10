@@ -1,0 +1,76 @@
+.section {
+  position: relative;
+  height: 450px;
+  background-image: url('/newsletter1.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; /* Εφέ parallax για πιο premium αίσθηση */
+  margin: 60px 0;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4); /* Σκουραίνει την εικόνα για να φαίνονται τα λευκά γράμματα */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+  text-align: center;
+  color: white;
+  padding: 0 20px;
+  max-width: 600px;
+}
+
+.title {
+  font-size: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  margin-bottom: 15px;
+}
+
+.subtitle {
+  font-family: 'Lucida Sans', sans-serif;
+  font-size: 1rem;
+  margin-bottom: 30px;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+.form {
+  display: flex;
+  gap: 10px;
+}
+
+.input {
+  flex: 1;
+  padding: 15px;
+  border: none;
+  border-radius: 2px;
+  font-family: 'Lucida Sans', sans-serif;
+  outline: none;
+}
+
+.button {
+  padding: 15px 30px;
+  background-color: #b38e5d;
+  color: white;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  letter-spacing: 1px;
+}
+
+.button:hover {
+  background-color: #8c6d45;
+}
+
+@media (max-width: 600px) {
+  .form { flex-direction: column; }
+  .section { height: 500px; background-attachment: scroll; }
+}
+.successMsg { color: #4CAF50; margin-top: 15px; font-weight: bold; }
+.errorMsg { color: #ff5252; margin-top: 15px; font-weight: bold; }

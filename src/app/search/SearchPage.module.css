@@ -1,0 +1,43 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  min-height: 60vh;
+}
+
+.title {
+  font-size: 1.5rem;
+  color: #294038;
+  margin-bottom: 30px;
+  font-family: "Lucida Sans", Geneva, sans-serif;
+}
+
+.title span {
+  color: #8c7851;
+  font-style: italic;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.loader, .noResults {
+  text-align: center;
+  padding: 50px;
+  font-size: 1.1rem;
+  color: #666;
+}
+
+/* Mobile προσαρμογή */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 προϊόντα ανά σειρά στο κινητό */
+    gap: 15px;
+  }
+  
+  .container {
+    padding: 100px 15px 40px 15px; /* Περισσότερο padding top λόγω του mobile header */
+  }
+}

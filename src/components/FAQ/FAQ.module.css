@@ -1,0 +1,87 @@
+.section {
+  padding: 80px 0;
+  background-color: transparent; /* Εδώ έγινε η αλλαγή */
+}
+.faqItem {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.5); /* Ελαφρώς διάφανο λευκό */
+  backdrop-filter: blur(5px); /* Προαιρετικό: θολώνει ελαφρώς το background πίσω από το FAQ */
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.container {
+  max-width: 800px; /* Πιο στενό για καλύτερη ανάγνωση */
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.title {
+  text-align: center;
+  font-size: 1.8rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.underline {
+  width: 40px;
+  height: 2px;
+  background-color: #b38e5d;
+  margin: 0 auto 40px auto;
+}
+
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.faqItem {
+  border: 1px solid #eee;
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.questionRow {
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.3s ease;
+}
+
+.questionRow:hover {
+  background-color: #fcfcfc;
+}
+
+.questionText {
+  font-family: 'Lucida Sans', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #333;
+}
+
+.answerWrapper {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-out;
+}
+
+.open {
+  max-height: 200px; /* Αρκετό ύψος για να χωράει η απάντηση */
+}
+
+.answerContent {
+  padding: 0 20px 20px 20px;
+  font-family: 'Lucida Sans', sans-serif;
+  font-size: 0.95rem;
+  color: #666;
+  line-height: 1.6;
+}

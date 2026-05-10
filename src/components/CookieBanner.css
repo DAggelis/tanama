@@ -1,0 +1,24 @@
+/* CookieBanner.css */
+.cookie-container-main {
+    position: fixed !important;
+    bottom: 25px !important;
+    right: 25px !important;
+    width: 320px !important;
+    background-color: rgba(41, 64, 56, 0.98) !important;
+    color: white !important;
+    padding: 20px !important;
+    border-radius: 16px !important;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.25) !important;
+    z-index: 9999 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+.cookie-button-wrapper {
+    display: flex !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    gap: 10px !important;
+    margin-top: 15px !important;
+}

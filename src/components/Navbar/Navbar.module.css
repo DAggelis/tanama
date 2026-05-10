@@ -1,0 +1,135 @@
+.wrapper {
+  width: var(--sidebar-width);
+  height: 100vh;
+  background-color: var(--bg-menubar); 
+  position: fixed;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.05);
+  z-index: 1000;
+  overflow-y: auto;
+  border-right: 1px solid rgba(41, 64, 56, 0.08);
+}
+
+@media (max-width: 1024px) {
+  .wrapper { display: none; }
+}
+
+.logoContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 50px 15px 30px 15px;
+}
+
+.tagline {
+  margin-top: 18px;
+  font-family: 'GFSNiceforoCustom', serif;
+  font-size: 0.72rem;
+  font-weight: bold;
+  color: var(--deep-green);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.menu { padding: 10px 25px 40px 25px; }
+
+.menuItem {
+  border-bottom: 1px solid rgba(41, 64, 56, 0.05);
+}
+
+.menuHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.linkText {
+  flex-grow: 1;
+  padding: 18px 0;
+  font-family: 'Alegreya Sans', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--deep-green);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.linkText:hover {
+  color: var(--old-gold);
+  transform: translateX(3px);
+}
+
+.toggleBtn, .arrowBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  font-size: 1.1rem;
+  color: var(--old-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* SUBMENU */
+.submenu {
+  display: flex;
+  flex-direction: column;
+  padding-left: 10px;
+  padding-bottom: 15px;
+}
+
+.subItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.subHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.subLink {
+  padding: 8px 0;
+  font-family: 'Alegreya Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--deep-green);
+  text-decoration: none;
+  opacity: 0.85;
+  transition: opacity 0.2s;
+}
+
+.subLink:hover {
+  opacity: 1;
+  color: var(--old-gold);
+}
+
+/* DEEP MENU */
+.deepMenu {
+  display: flex;
+  flex-direction: column;
+  padding-left: 15px;
+  margin: 5px 0 10px 5px;
+  border-left: 1px solid rgba(184, 134, 11, 0.25);
+}
+
+.deepLink {
+  padding: 5px 0;
+  font-size: 0.78rem;
+  color: var(--deep-green);
+  text-decoration: none;
+  opacity: 0.7;
+}
+
+.deepLink:hover {
+  opacity: 1;
+  color: var(--old-gold);
+}

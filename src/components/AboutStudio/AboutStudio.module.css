@@ -1,0 +1,102 @@
+.section {
+  padding: 80px 0;
+  background-color: transparent;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.contentWrapper {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+}
+
+.imageSide {
+  flex: 1;
+}
+
+.imageFrame {
+  position: relative;
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+}
+
+/* Διακοσμητική γωνία για gallery feel */
+.imageFrame::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  width: 50px;
+  height: 50px;
+  border-top: 2px solid #b38e5d;
+  border-left: 2px solid #b38e5d;
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: grayscale(20%);
+  transition: filter 0.5s ease;
+}
+
+.imageFrame:hover .image {
+  filter: grayscale(0%);
+}
+
+.textSide {
+  flex: 1;
+}
+
+.title {
+  font-size: 2rem;
+  color: #222;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+}
+
+.underline {
+  width: 40px;
+  height: 2px;
+  background-color: #b38e5d;
+  margin-bottom: 25px;
+}
+
+.description {
+  font-family: 'Lucida Sans', sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.subtext {
+  font-family: 'Lucida Sans', sans-serif;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: #b38e5d;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .contentWrapper {
+    flex-direction: column;
+    text-align: center;
+    gap: 40px;
+  }
+  
+  .underline {
+    margin: 0 auto 25px auto;
+  }
+  
+  .imageSide {
+    width: 100%;
+    max-width: 500px;
+  }
+}
