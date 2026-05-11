@@ -9,15 +9,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const isInitialMount = useRef(true);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // 1. Φόρτωση από LocalStorage κατά το Mount
   useEffect(() => {
     const saved = localStorage.getItem('cart');
     if (saved) {
       try {
         const parsedCart = JSON.parse(saved);
-        if (Array.isArray(parsedCart)) {
-          setCart(parsedCart);
-        }
+        if (Array.isArray(parsedCart)) setCart(parsedCart);
       } catch (e) {
         console.error("Error parsing cart:", e);
       }
@@ -25,7 +22,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setIsLoaded(true);
   }, []);
 
-  // 2. Αποθήκευση στο LocalStorage (Μόνο αφού φορτωθούν τα παλιά δεδομένα)
   useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false;
@@ -38,9 +34,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addToCart = (product: any) => {
     setCart((prev) => {
-      // Ελέγχουμε αν υπάρχει ήδη με βάση το ID ΚΑΙ τον τίτλο (variants)
       const existing = prev.find(item => item._id === product._id && item.title === product.title);
-      
       if (existing) {
         return prev.map(item =>
           item._id === product._id && item.title === product.title
@@ -66,23 +60,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }));
   };
 
-  const totalPrice = useMemo(() => {
+  // 1. Καθαρή αξία προϊόντων (Subtotal)
+  const subtotal = useMemo(() => {
     return cart.reduce((acc, item) => acc + (Number(item.price || 0) * item.quantity), 0);
   }, [cart]);
 
-  /**
-   * ΒΕΛΤΙΩΜΕΝΟΣ ΥΠΟΛΟΓΙΣΜΟΣ ΒΑΡΟΥΣ
-   * Μετατρέπει τα κιλά σε γραμμάρια αν το rawWeight είναι μικρό νούμερο (π.χ. 0.5kg -> 500g)
-   */
+  // 2. Συνολικό βάρος (Weight) - Χωρίς αυθαίρετους πολλαπλασιασμούς
   const totalWeight = useMemo(() => {
     return cart.reduce((acc, item) => {
-      // Προσπάθεια λήψης βάρους από πολλαπλές πηγές (variant ή main weight)
-      const rawWeight = Number(item.variantWeight) || Number(item.weight) || 0;
-      
-      // Αν το βάρος είναι κάτω από 50, θεωρούμε ότι είναι ΚΙΛΑ και μετατρέπουμε σε γραμμάρια
-      // Αν είναι πάνω από 50, θεωρούμε ότι είναι ήδη ΓΡΑΜΜΑΡΙΑ.
-      const weightInGrams = (rawWeight > 0 && rawWeight < 50) ? rawWeight * 1000 : rawWeight;
-      
+      const weightInGrams = Number(item.variantWeight) || Number(item.weight) || 0;
       return acc + (weightInGrams * item.quantity);
     }, 0);
   }, [cart]);
@@ -93,8 +79,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       addToCart, 
       removeFromCart, 
       updateQuantity, 
-      totalPrice,
-      totalWeight,
+      subtotal,      // Το στέλνουμε στο Header/Navbar
+      totalWeight,   // Το στέλνουμε στο Checkout
       isLoaded 
     }}>
       {children}

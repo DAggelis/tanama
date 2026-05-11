@@ -28,7 +28,8 @@ export default function MobileNavbar() {
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   
-  const { cart, totalPrice, removeFromCart, updateQuantity } = useCart();
+  // ΔΙΟΡΘΩΣΗ: Παίρνουμε το subtotal αντί για το totalPrice
+  const { cart, subtotal, removeFromCart, updateQuantity } = useCart();
   const router = useRouter();
 
   // AJAX Logic για τα Suggestions
@@ -103,7 +104,7 @@ export default function MobileNavbar() {
         </button>
         
         <Link href="/" className={styles.logoLink} onClick={closeAll}>
-           <Image src={logoImg} alt="Logo" width={100} height={40} style={{ objectFit: 'contain' }} priority />
+            <Image src={logoImg} alt="Logo" width={100} height={40} style={{ objectFit: 'contain' }} priority />
         </Link>
 
         <div className={styles.rightIcons}>
@@ -121,7 +122,7 @@ export default function MobileNavbar() {
         </div>
       </div>
 
-      {/* SEARCH ROW (Slide Down Logic) */}
+      {/* SEARCH ROW */}
       <div className={`${styles.searchRow} ${isSearchOpen ? styles.searchActive : ''}`}>
         <form onSubmit={handleSearch} className={styles.searchForm}>
           <input 
@@ -238,8 +239,12 @@ export default function MobileNavbar() {
           <div className={styles.cartFooter}>
             <div className={styles.totalRow}>
               <span>ΣΥΝΟΛΟ:</span>
-              <span>{totalPrice.toFixed(2).replace('.', ',')} €</span>
+              {/* ΔΙΟΡΘΩΣΗ: Χρήση subtotal */}
+              <span>{subtotal.toFixed(2).replace('.', ',')} €</span>
             </div>
+            <p style={{ fontSize: '11px', color: '#888', textAlign: 'center', marginBottom: '10px' }}>
+              * Τα μεταφορικά υπολογίζονται στο checkout
+            </p>
             <Link href="/checkout" className={styles.checkoutBtn} onClick={closeAll}>ΟΛΟΚΛΗΡΩΣΗ ΑΓΟΡΑΣ</Link>
           </div>
         )}

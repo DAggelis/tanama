@@ -16,7 +16,8 @@ export default function Header() {
   const [isLoading, setIsLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   
-  const { cart, totalPrice, removeFromCart, updateQuantity } = useCart();
+  // ΑΛΛΑΓΗ ΕΔΩ: Παίρνουμε το subtotal αντί για το totalPrice
+  const { cart, subtotal, removeFromCart, updateQuantity } = useCart();
   const router = useRouter();
   const searchRef = useRef<HTMLDivElement>(null);
 
@@ -103,7 +104,6 @@ export default function Header() {
               )}
             </button>
             
-            {/* SEARCH AREA */}
             <div className={styles.searchContainer} ref={searchRef}>
               <form className={styles.searchWrapper} onSubmit={handleSearch}>
                 <input 
@@ -119,7 +119,6 @@ export default function Header() {
                 </button>
               </form>
 
-              {/* LIVE SUGGESTIONS DROPDOWN */}
               {showSuggestions && searchQuery.length >= 2 && (
                 <div className={styles.suggestionsDropdown}>
                   {suggestions.length > 0 ? (
@@ -160,7 +159,6 @@ export default function Header() {
         </div>
       </header>
 
-      {/* CART DRAWER */}
       <div className={`${styles.cartDrawer} ${isCartOpen ? styles.cartActive : ''}`}>
         <div className={styles.cartHeader}>
           <h3>ΤΟ ΚΑΛΑΘΙ ΜΟΥ</h3>
@@ -200,8 +198,12 @@ export default function Header() {
           <div className={styles.cartFooter}>
             <div className={styles.totalRow}>
               <span>ΣΥΝΟΛΟ:</span>
-              <span>{totalPrice.toFixed(2).replace('.', ',')} €</span>
+              {/* ΑΛΛΑΓΗ ΕΔΩ: Χρήση subtotal αντί για totalPrice */}
+              <span>{subtotal.toFixed(2).replace('.', ',')} €</span>
             </div>
+            <p className={styles.shippingNotice} style={{ fontSize: '12px', color: '#666', marginBottom: '10px' }}>
+              * Τα μεταφορικά υπολογίζονται στο ταμείο
+            </p>
             <Link href="/checkout" onClick={() => setIsCartOpen(false)}>
               <button className={styles.checkoutBtn}>ΟΛΟΚΛΗΡΩΣΗ ΑΓΟΡΑΣ</button>
             </Link>

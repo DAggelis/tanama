@@ -19,79 +19,57 @@ import { ChevronLeft, Lock, CreditCard, Loader2, Globe } from 'lucide-react';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
-// --- ΥΠΟΛΟΓΙΣΜΟΣ ΜΕΤΑΦΟΡΙΚΩΝ Β' ΠΡΟΤΕΡΑΙΟΤΗΤΑΣ ΜΕ ΦΠΑ 24% ---
+// --- ΥΠΟΛΟΓΙΣΜΟΣ ΜΕΤΑΦΟΡΙΚΩΝ ΜΕ ΒΑΣΗ ΖΩΝΕΣ ΕΛΤΑ & ΦΠΑ 24% ---
 const calculateShipping = (countryCode: string, weightInGrams: number, totalPrice: number) => {
   if (weightInGrams <= 0) return 0;
-
+  
   let baseCost = 0;
+  const weightInKg = weightInGrams / 1000;
 
-  // 1. ΕΛΛΑΔΑ (GR)
+  // 1. ΕΛΛΑΔΑ
   if (countryCode === 'GR') {
-    if (totalPrice >= 100) return 0;
-    if (weightInGrams <= 200) baseCost = 3.20;
-    else if (weightInGrams <= 1000) baseCost = 5.00;
-    else if (weightInGrams <= 2000) baseCost = 8.00;
-    else baseCost = 10.00;
+    if (totalPrice >= 100) return 0; // Δωρεάν άνω των 100€ μόνο Ελλάδα
+    if (weightInGrams <= 500) baseCost = 4.00;
+    else if (weightInGrams <= 2000) baseCost = 6.00;
+    else baseCost = 6.00 + Math.ceil(weightInKg - 2) * 1.50; // +1.5€ ανά έξτρα κιλό
   } 
+  // 2. ΕΞΩΤΕΡΙΚΟ
   else {
-    const totalWeight = weightInGrams + 150;
-    const weightInKg = totalWeight / 1000;
+    // Ορισμός Ζωνών βάσει των χωρών που προσθέσαμε
+    const zone1 = ['AT','BE','BG','FR','DE','GE','GB','HU','UA','PL','RO','RS','SE','LT','MK','FI','IT','ES','NL','AL','CY'];
+    const zone2 = ['RU','IL','TR','EG'];
+    const zone3 = ['US','CA','AU','JP','NZ','ZA'];
 
-    const zone1 = [
-      'AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR', 'GB', 
-      'HR', 'HU', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL', 'PT', 'RO', 
-      'SE', 'SI', 'SK', 'AL', 'UA'
-    ];
-    
-    const zone2 = ['US', 'CA', 'CH', 'IS', 'NO', 'TR', 'IL', 'RU'];
-
-    if (totalWeight <= 2000) {
-      if (zone1.includes(countryCode)) {
-        if (totalWeight <= 100) baseCost = 10.50;
-        else if (totalWeight <= 250) baseCost = 12.50;
-        else if (totalWeight <= 500) baseCost = 16.50;
-        else if (totalWeight <= 1000) baseCost = 24.50;
-        else baseCost = 35.00;
-      } 
-      else if (zone2.includes(countryCode)) {
-        if (totalWeight <= 100) baseCost = 11.50;
-        else if (totalWeight <= 250) baseCost = 14.50;
-        else if (totalWeight <= 500) baseCost = 19.50;
-        else if (totalWeight <= 1000) baseCost = 29.50;
-        else baseCost = 42.00;
-      }
-      else {
-        if (totalWeight <= 100) baseCost = 12.50;
-        else if (totalWeight <= 250) baseCost = 16.50;
-        else if (totalWeight <= 500) baseCost = 21.50;
-        else if (totalWeight <= 1000) baseCost = 33.00;
-        else baseCost = 49.50;
-      }
-    } else {
-      const kgForCalc = Math.ceil(weightInKg);
-      if (zone1.includes(countryCode)) baseCost = 18.00 + (kgForCalc * 4.00);
-      else if (zone2.includes(countryCode)) baseCost = 25.00 + (kgForCalc * 5.50);
-      else baseCost = 32.00 + (kgForCalc * 6.50);
+    if (zone1.includes(countryCode)) {
+      if (weightInKg <= 0.5) baseCost = 12.00;
+      else if (weightInKg <= 1) baseCost = 16.50;
+      else if (weightInKg <= 2) baseCost = 24.00;
+      else baseCost = 24.00 + Math.ceil(weightInKg - 2) * 4.50;
+    } 
+    else if (zone2.includes(countryCode) || zone3.includes(countryCode)) {
+      if (weightInKg <= 0.5) baseCost = 16.50;
+      else if (weightInKg <= 1) baseCost = 26.00;
+      else if (weightInKg <= 2) baseCost = 38.00;
+      else baseCost = 38.00 + Math.ceil(weightInKg - 2) * 8.50;
+    }
+    else {
+      baseCost = 20.00; // Default για λοιπές χώρες
     }
   }
 
-  return baseCost * 1.24;
+  // Επιστρέφουμε την τελική τιμή (το ΦΠΑ περιλαμβάνεται ήδη στις παραπάνω τιμές λιανικής)
+  return baseCost; 
 };
 
-// Configuration για το styling των Stripe Elements
 const stripeElementOptions = {
   style: {
     base: {
       fontSize: '16px',
       color: '#424770',
       fontFamily: 'Inter, sans-serif',
-      '::placeholder': {
-        color: '#aab7c4',
-      },
+      '::placeholder': { color: '#aab7c4' },
     },
-    invalid: {
-      color: '#9e2146',
-    },
+    invalid: { color: '#9e2146' },
   },
 };
 
@@ -99,7 +77,7 @@ function CheckoutFormContent() {
   const stripe = useStripe();
   const elements = useElements();
   const router = useRouter();
-  const { cart, totalPrice, totalWeight } = useCart(); 
+  const { cart, subtotal, totalWeight } = useCart(); 
   
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -109,8 +87,9 @@ function CheckoutFormContent() {
     city: '', zip: '', phone: '', cardHolder: ''
   });
 
-  const shippingCost = calculateShipping(country, totalWeight, totalPrice);
-  const grandTotal = totalPrice + shippingCost;
+  // Χρησιμοποιούμε το subtotal από το Context για τον υπολογισμό
+  const shippingCost = calculateShipping(country, totalWeight, subtotal);
+  const grandTotal = subtotal + shippingCost;
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -128,17 +107,21 @@ function CheckoutFormContent() {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/create-payment-intent', {
+      // ΚΑΛΕΣΜΑ API: Στέλνουμε χώρα και βάρος για να τα ξέρει το Stripe
+      const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           items: cart, 
-          shippingCountry: country, 
-          totalWeight: totalWeight,
-          shippingCost: shippingCost
+          country: country, // Η επιλεγμένη χώρα
+          totalWeight: totalWeight // Το συνολικό βάρος
         }),
       });
+
       const data = await response.json();
+
+      if (!response.ok) throw new Error(data.error || "Σφάλμα πληρωμής");
+
       const result = await stripe.confirmCardPayment(data.clientSecret, {
         payment_method: {
           card: elements.getElement(CardNumberElement)!,
@@ -148,11 +131,13 @@ function CheckoutFormContent() {
           },
         },
       });
+
       if (result.error) alert(result.error.message);
       else if (result.paymentIntent?.status === 'succeeded') router.push('/success');
-    } catch (err) { 
+
+    } catch (err: any) { 
       console.error(err); 
-      alert("Σφάλμα κατά την επεξεργασία. Παρακαλώ δοκιμάστε ξανά.");
+      alert(err.message || "Σφάλμα κατά την επεξεργασία.");
     } finally { 
       setLoading(false); 
     }
@@ -215,11 +200,11 @@ function CheckoutFormContent() {
               <div className={styles.calcTable}>
                 <div className={styles.calcRow}>
                   <span>Υποσύνολο</span>
-                  <span>{totalPrice.toFixed(2)}€</span>
+                  <span>{subtotal.toFixed(2)}€</span>
                 </div>
                 <div className={styles.calcRow}>
-                   <span>Μεταφορικά </span>
-                   <span style={{ color: shippingCost === 0 ? '#27ae60' : 'inherit', fontWeight: shippingCost === 0 ? 'bold' : 'normal' }}>
+                   <span>Μεταφορικά ({totalWeight}g)</span>
+                   <span style={{ color: shippingCost === 0 ? '#27ae60' : 'inherit', fontWeight: 'bold' }}>
                      {shippingCost === 0 ? 'ΔΩΡΕΑΝ' : `${shippingCost.toFixed(2)}€`}
                    </span>
                 </div>
@@ -229,7 +214,6 @@ function CheckoutFormContent() {
                 </div>
               </div>
 
-              {/* ΔΙΟΡΘΩΜΕΝΟ PAYMENT SECTION */}
               <div className={styles.paymentAccordion}>
                  <div className={styles.accordionHeader}>
                    <CreditCard size={18} className={styles.accordionIcon} />
@@ -243,11 +227,9 @@ function CheckoutFormContent() {
                       className={styles.inputField} 
                       onChange={handleInputChange} 
                     />
-                    
                     <div className={styles.stripeInputWrapper}>
                       <CardNumberElement options={stripeElementOptions} />
                     </div>
-
                     <div className={styles.inputRowStripe}>
                       <div className={styles.stripeInputWrapperHalf}>
                         <CardExpiryElement options={stripeElementOptions} />
