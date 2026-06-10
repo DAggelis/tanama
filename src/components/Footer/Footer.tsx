@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { FaFacebookF, FaInstagram, FaRegEnvelope } from 'react-icons/fa';
+import { FaFacebookF, FaInstagram, FaRegEnvelope, FaMapMarkerAlt, FaPhoneAlt } from 'react-icons/fa'; // <--- Προστέθηκαν τα εικονίδια εδώ
 import Modal from '@/components/Modal/Modal'; // Βεβαιώσου ότι η διαδρομή είναι σωστή
 import styles from './Footer.module.css';
 
@@ -66,6 +66,20 @@ export default function Footer() {
                 <span>tonamagr@gmail.com</span>
               </a>
             </li>
+            {/* ΝΕΑ ΣΤΟΙΧΕΙΑ */}
+            <li>
+              <div className={styles.emailLink}>
+                <FaMapMarkerAlt size={18} className={styles.icon} /> 
+                <span>Γωνιές Πεδιάδος, Κρήτη</span>
+              </div>
+            </li>
+            <li>
+              <a href="tel:+306906684397" className={styles.emailLink}>
+                <FaPhoneAlt size={18} className={styles.icon} /> 
+                <span>690 668 4397</span>
+              </a>
+            </li>
+
           </ul>
           
           <div className={styles.socials}>
@@ -82,7 +96,7 @@ export default function Footer() {
       
       <div className={styles.bottomBar}>
         <div className={styles.bottomContent}>
-          <p>© {currentYear} tanama.g</p>
+          <p>© {currentYear} tanama.gr</p>
         </div>
       </div>
 
@@ -100,7 +114,6 @@ export default function Footer() {
             <p>Καλώς ήλθατε στο T'ÁNAMA. Η χρήση της ιστοσελίδας μας συνεπάγεται την αποδοχή των κάτωθι όρων...</p>
             <h3>1. Πνευματική Ιδιοκτησία</h3>
             <p>Όλο το περιεχόμενο, συμπεριλαμβανομένων των εικόνων των Αγιογραφιών, αποτελεί πνευματική ιδιοκτησία του T'ÁNAMA.</p>
-            {/* Πρόσθεσε εδώ το κείμενό σου */}
           </div>
         )}
         

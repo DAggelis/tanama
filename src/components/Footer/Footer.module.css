@@ -66,7 +66,7 @@
 .modalBtn:hover {
   color: var(--old-gold);
   opacity: 1;
-  padding-left: 5px; /* Εφέ κίνησης όπως είχες στα links */
+  padding-left: 5px; /* Εφέ κίνησης όπως είχε στα links */
 }
 
 .contactInfo {
@@ -75,12 +75,16 @@
   margin-bottom: 25px;
 }
 
+/* ΔΙΟΡΘΩΣΗ: Προσθήκη κενού ανάμεσα στα στοιχεία επικοινωνίας */
 .contactInfo li {
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-size: 0.9rem;
-  opacity: 0.9;
+  margin-bottom: 16px; /* Δίνει αέρα ανάμεσα σε email, διεύθυνση και τηλέφωνο */
+}
+
+/* Σιγουρεύει ότι το τελευταίο li δεν θα έχει περιττό κενό από κάτω */
+.contactInfo li:last-child {
+  margin-bottom: 0;
 }
 
 .emailLink {
@@ -89,15 +93,20 @@
   gap: 12px;
   text-decoration: none;
   color: inherit;
+  font-size: 0.9rem;
+  opacity: 0.9;
   transition: color 0.2s ease;
+  width: 100%; /* Για να πιάνει όλο το χώρο και να στοιχίζεται σωστά */
 }
 
-.emailLink:hover {
+/* Εφαρμόζει hover εφέ μόνο όταν είναι όντως σύνδεσμος (email/τηλέφωνο) και όχι απλό div */
+a.emailLink:hover {
   color: var(--old-gold);
 }
 
 .icon {
   color: var(--old-gold);
+  flex-shrink: 0; /* Εμποδίζει το εικονίδιο από το να μικρύνει αν το κείμενο είναι μεγάλο */
 }
 
 .socials {
@@ -158,9 +167,14 @@
     gap: 40px;
   }
 
+  /* ΔΙΟΡΘΩΣΗ: Σωστή στοίχιση στο κέντρο για mobile */
   .description, .contactInfo li, .socials, .logoWrapper {
     margin-left: auto;
     margin-right: auto;
+    justify-content: center;
+  }
+
+  .emailLink {
     justify-content: center;
   }
 
